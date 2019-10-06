@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import * as R from 'ramda'
 
 import ContactItem from '../components/ContactItem'
-import { Data, Styles } from '../shared/context'
+import { Styles } from '../shared/context'
 
 // Render a list of contacts alphabetically by last name, first name.
 // The list should be broken up into sections where each section has a title of the first letter of the last names of contacts in that section.
@@ -20,30 +20,13 @@ import { Data, Styles } from '../shared/context'
 // Bob Larson – (542) 321-3456
 // .....
 
+function Group({ group, styles }) {
+  return <p style={styles.group}>{group}</p>
+}
+
 export default function List({ heading, items, group }) {
+
   const styles = useContext(Styles)
 
-  return (
-    <div style={styles.list}>
-      {heading && <h1>{heading}</h1>}
-      {items.map((item, index) => (
-        <div key={index}>
-          {!index && (
-            <p
-              style={{
-                fontSize: 32,
-                margin: 0,
-                marginTop: 16,
-                textAlign: 'right',
-                borderBottom: '1px solid #ccc',
-              }}
-            >
-              {group}
-            </p>
-          )}
-          <ContactItem {...item} />
-        </div>
-      ))}
-    </div>
-  )
+  return <div style={styles.list}>{heading && <h1>{heading}</h1>}</div>
 }
