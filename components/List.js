@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import * as R from 'ramda'
 
 import ContactItem from '../components/ContactItem'
@@ -20,13 +20,29 @@ import { Data, Styles } from '../shared/context'
 // Bob Larson – (542) 321-3456
 // .....
 
-export default function List({ items }) {
+export default function List({ heading, items, group }) {
   const styles = useContext(Styles)
 
   return (
     <div style={styles.list}>
-      {items.map((item, idx) => (
-        <ContactItem key={idx} {...item} />
+      {heading && <h1>{heading}</h1>}
+      {items.map((item, index) => (
+        <div key={index}>
+          {!index && (
+            <p
+              style={{
+                fontSize: 32,
+                margin: 0,
+                marginTop: 16,
+                textAlign: 'right',
+                borderBottom: '1px solid #ccc',
+              }}
+            >
+              {group}
+            </p>
+          )}
+          <ContactItem {...item} />
+        </div>
       ))}
     </div>
   )
