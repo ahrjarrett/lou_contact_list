@@ -1,20 +1,16 @@
-import React from "react";
+import React, { useContext } from 'react'
 
-const ContactItem = ({ firstName, lastName, phone }) => {
+import { Styles } from '../shared/context'
+
+export default function ContactItem({ firstName, lastName, phone }) {
+  const styles = useContext(Styles)
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        borderBottom: "1px solid #eee"
-      }}
-    >
+    <div style={styles.contactItem}>
       <p>
         {firstName} <strong>{lastName}</strong>
       </p>
       <p>{phone}</p>
     </div>
-  );
-};
-
-export default ContactItem;
+  )
+}
