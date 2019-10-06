@@ -1,17 +1,19 @@
-import React from "react";
-import Head from "next/head";
+import React, { Fragment, useEffect, useState } from 'react'
+import Head from 'next/head'
 
-import ContactList from "../components/ContactList";
+import ContactList from '../components/ContactList'
+import Context from '../shared/context'
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Next.js App</title>
-    </Head>
+export default function Index() {
+  useEffect(() => {
+    document.title = 'Contacts'
+  }, [])
 
-    <h1>Contacts</h1>
-    <ContactList />
-  </div>
-);
-
-export default Home;
+  return (
+    <Context>
+      <Head />
+      <h1>Contacts</h1>
+      <ContactList />
+    </Context>
+  )
+}
