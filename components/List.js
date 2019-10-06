@@ -24,9 +24,15 @@ function Group({ group, styles }) {
   return <p style={styles.group}>{group}</p>
 }
 
-export default function List({ heading, items, group }) {
-
+export default function List({ heading, items, group, handleClick }) {
   const styles = useContext(Styles)
 
-  return <div style={styles.list}>{heading && <h1>{heading}</h1>}</div>
+  return (
+    <div style={styles.list}>
+      {heading && <h1>{heading}</h1>}
+      {items.map(item => (
+        <ContactItem {...item} key={item.id} handleClick={handleClick} />
+      ))}
+    </div>
+  )
 }
