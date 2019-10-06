@@ -1,4 +1,4 @@
-const contactList = {
+const list = {
   width: 400,
 }
 
@@ -9,6 +9,6 @@ const contactItem = {
 }
 
 export default {
-  contactList,
+  list,
   contactItem,
 }

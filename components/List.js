@@ -20,15 +20,13 @@ import { Data, Styles } from '../shared/context'
 // Bob Larson – (542) 321-3456
 // .....
 
-export default function ContactList() {
+export default function List({ items }) {
   const styles = useContext(Styles)
-  const { contacts } = useContext(Data)
-  const directory = R.identity(contacts)
 
   return (
-    <div style={styles.contactList}>
-      {directory.map((contact, idx) => (
-        <ContactItem key={idx} {...contact} />
+    <div style={styles.list}>
+      {items.map((item, idx) => (
+        <ContactItem key={idx} {...item} />
       ))}
     </div>
   )
