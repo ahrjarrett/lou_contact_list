@@ -1,19 +1,27 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
+import * as R from 'ramda'
 
-import ContactList from '../components/ContactList'
-import Context from '../shared/context'
+import ContactItem from '../components/ContactItem'
+import Directory from '../components/Directory'
+import Context, { Data, Styles } from '../shared/context'
+import { getEntities } from '../shared/utils'
 
 export default function Index() {
+  const data = useContext(Data)
+  const styles = useContext(Styles)
+  const { contacts, groups } = getEntities()
+
   useEffect(() => {
     document.title = 'Contacts'
   }, [])
 
   return (
     <Context>
-      <Head />
-      <h1>Contacts</h1>
-      <ContactList />
+      <div>
+        <Head />
+        <Directory contacts={contacts} groups={groups} />
+      </div>
     </Context>
   )
 }

@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import * as R from 'ramda'
 
 import ContactItem from '../components/ContactItem'
-import { Data, Styles } from '../shared/context'
+import { Styles } from '../shared/context'
 
 // Render a list of contacts alphabetically by last name, first name.
 // The list should be broken up into sections where each section has a title of the first letter of the last names of contacts in that section.
@@ -20,15 +20,25 @@ import { Data, Styles } from '../shared/context'
 // Bob Larson – (542) 321-3456
 // .....
 
-export default function ContactList() {
+export default function List({
+  heading,
+  items,
+  group,
+  handleClick,
+  favorites,
+}) {
   const styles = useContext(Styles)
-  const { contacts } = useContext(Data)
-  const directory = R.identity(contacts)
 
   return (
-    <div style={styles.contactList}>
-      {directory.map((contact, idx) => (
-        <ContactItem key={idx} {...contact} />
+    <div style={styles.list}>
+      {heading && items.length > 0 && <h1>{heading}</h1>}
+      {items.map(item => (
+        <ContactItem
+          {...item}
+          key={item.id}
+          handleClick={handleClick}
+          favorite={favorites[item.id]}
+        />
       ))}
     </div>
   )
