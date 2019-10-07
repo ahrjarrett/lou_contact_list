@@ -2,8 +2,8 @@ import React, { useContext, useReducer } from 'react'
 import dynamic from 'next/dynamic'
 import * as R from 'ramda'
 
-import { selectEntitiesByGroup } from '../shared/utils'
 import { Styles } from '../shared/context'
+import { selectEntitiesByGroup } from '../shared/selectors'
 
 const List = dynamic(() => import('../components/List'))
 

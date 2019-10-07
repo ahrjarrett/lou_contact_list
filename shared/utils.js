@@ -43,12 +43,13 @@ const normalizePhone = R.pipe(
   normalize10DigitPhone,
 )
 
-const phoneLens = R.lens(R.prop('phone'))
-
 const getLastNameFirstLetter = R.compose(
   R.head,
   R.prop('lastName'),
 )
+
+const assignGroup = entity =>
+  R.assoc('group', getLastNameFirstLetter(entity), entity)
 
 export const buildUpDirectory = R.pipe(
   addMetadata,
@@ -60,21 +61,12 @@ export const buildUpDirectory = R.pipe(
       phone: normalizePhone,
     }),
   ),
-  R.pipe(
-    R.map(x => R.assoc('group', getLastNameFirstLetter(x), x)),
-    R.identity,
-  ),
+  R.map(assignGroup),
 )
 
 export const buildDirectoryGroups = R.pipe(
-  R.groupBy(
-    R.compose(
-      R.head,
-      R.prop('lastName'),
-    ),
-  ),
+  R.groupBy(getLastNameFirstLetter),
   R.map(R.chain(R.prop('id'))),
-  //R.indexBy(R.prop('id')),
 )
 
 const contacts = buildUpDirectory(data.contacts)
@@ -88,8 +80,3 @@ const makeEntities = (contacts, groups) => () => ({
 })
 
 export const getEntities = makeEntities(contacts, groups)
-
-export const selectEntitiesByGroup = entity => group =>
-  R.keys(entity)
-    .map(id => entity[id])
-    .filter(x => group.includes(x.group))

@@ -5,11 +5,6 @@ const listWrapper = {
   flexWrap: 'wrap',
 }
 
-const home = {
-  display: 'flex',
-  flexDirection: 'column',
-}
-
 const list = {
   width: 400,
   marginLeft: 15,
@@ -33,7 +28,6 @@ const group = {
 export default {
   contactItem,
   group,
-  home,
   listWrapper,
   list,
 }

@@ -18,18 +18,10 @@ export default function Index() {
 
   return (
     <Context>
-      <div style={styles.home}>
+      <div>
         <Head />
         <Directory contacts={contacts} groups={groups} />
       </div>
     </Context>
   )
 }
-
-//          {false && (
-//            <List
-//              heading="Favorites"
-//              items={favorites}
-//              component={<ContactItem />}
-//            />
-//          )}
