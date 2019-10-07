@@ -31,7 +31,7 @@ export default function List({
 
   return (
     <div style={styles.list}>
-      {heading && <h1>{heading}</h1>}
+      {heading && items.length > 0 && <h1>{heading}</h1>}
       {items.map(item => (
         <ContactItem
           {...item}

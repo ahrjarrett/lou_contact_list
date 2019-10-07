@@ -17,6 +17,37 @@ export function reducer(state, { type, payload }) {
   }
 }
 
+const makeListRenderer = (
+  styles,
+  handleClick,
+  contacts,
+  groups,
+) => doesFilterFavorites => state => {
+  return R.keys(groups).map((groupId, index) => {
+    const groupedContacts = selectEntitiesByGroup(contacts)(groupId)
+
+    const filteredContacts = !doesFilterFavorites
+      ? groupedContacts
+      : groupedContacts.filter(({ id }) => state[id])
+
+    console.log('DEBUG::\n\n\ngroupedContacts\n', groupedContacts)
+    console.log('DEBUG::\n\n\nfilteredContacts\n', filteredContacts)
+
+    return (
+      <div key={groupId}>
+        <List
+          handleClick={handleClick}
+          heading={groupId}
+          items={filteredContacts}
+          group={groupId}
+          style={styles.listWrapper}
+          favorites={state}
+        />
+      </div>
+    )
+  })
+}
+
 export default function Directory({ contacts, groups }) {
   const styles = useContext(Styles)
 
@@ -32,28 +63,27 @@ export default function Directory({ contacts, groups }) {
     ),
   )
 
+  const renderList = makeListRenderer(
+    styles,
+    handleClick,
+    contacts,
+    groups,
+  )
+  const renderContacts = renderList(false)
+  const renderFavorites = renderList(true)
+
   console.log('DEBUG::\n\n\nstate\n', state)
 
   return (
-    <div>
-      {R.keys(groups).map((groupId, index) => {
-        const groupedContacts = selectEntitiesByGroup(contacts)(groupId)
-
-        console.log('DEBUG::\n\n\ngroupedContacts\n', groupedContacts)
-
-        return (
-          <div key={groupId}>
-            <List
-              handleClick={handleClick}
-              heading={groupId}
-              items={groupedContacts}
-              group={groupId}
-              style={styles.listWrapper}
-              favorites={state}
-            />
-          </div>
-        )
-      })}
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div style={{ width: '50%' }}>
+        <h1>All Contacts</h1>
+        {renderContacts(state)}
+      </div>
+      <div style={{ width: '50%' }}>
+        <h1>Favorites</h1>
+        {renderFavorites(state)}
+      </div>
     </div>
   )
 }
