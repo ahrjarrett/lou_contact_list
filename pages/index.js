@@ -1,22 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { compose, forEachObjIndexed, T, is, cond, type, identity, tryCatch } from 'ramda'
+import * as R from 'ramda'
 
 import ContactItem from '../components/ContactItem'
+import Directory from '../components/Directory'
 import Context, { Data, Styles } from '../shared/context'
-import * as _ from '../shared/utils'
-
-const List = dynamic(() => import('../components/List'))
+import { getEntities } from '../shared/utils'
 
 export default function Index() {
-  const { contacts } = useContext(Data)
+  const data = useContext(Data)
   const styles = useContext(Styles)
-  const directory = _.buildUpDirectory(contacts)
-  const groups = _.buildDirectoryGroups(directory)
-
-  //console.log('DEBUG::\n\n\ndirectory\n', directory)
-  //console.log('DEBUG::\n\n\ngroups\n', groups)
+  const { contacts, groups } = getEntities()
 
   useEffect(() => {
     document.title = 'Contacts'
@@ -26,22 +20,16 @@ export default function Index() {
     <Context>
       <div style={styles.home}>
         <Head />
-        {Object.keys(directory).map((key, index) => (
-          <div key={key}>
-            {
-              <List
-                heading={!index ? 'Directory' : null}
-                items={directory[key]}
-                group={key}
-                style={styles.List}
-              />
-            }
-            {false && (
-              <List heading="Favorites" items={favorites} component={<ContactItem />} />
-            )}
-          </div>
-        ))}
+        <Directory contacts={contacts} groups={groups} />
       </div>
     </Context>
   )
 }
+
+//          {false && (
+//            <List
+//              heading="Favorites"
+//              items={favorites}
+//              component={<ContactItem />}
+//            />
+//          )}

@@ -9,15 +9,20 @@ export const generateId = R.compose(
   () => count++,
 )
 
-//const logObjectValues = (value, key) => console.log(key + ':' + value, '\n')
-
 export const exists = R.complement(R.isEmpty)
 
 export const mapIndexed = R.addIndex(R.map)
 
 export const trace = R.tap(console.log)
 
-export const addMetadata = R.map(x => R.assoc('id', generateId(), x))
+// Call R.once per entity closure so we don't continue incrementing ids on state change:
+export const addId = R.once(R.map(x => R.assoc('id', generateId(), x)))
+export const initializeFavorites = R.map(R.assoc('favorite', false))
+
+const addMetadata = R.pipe(
+  addId,
+  initializeFavorites,
+)
 
 const omitWhenPropIsEmpty = p => R.filter(R.propSatisfies(exists, p))
 
@@ -40,15 +45,13 @@ const normalizePhone = R.pipe(
 
 const phoneLens = R.lens(R.prop('phone'))
 
-const preprocessEntity = R.pipe(addMetadata)
-
 const getLastNameFirstLetter = R.compose(
   R.head,
   R.prop('lastName'),
 )
 
 export const buildUpDirectory = R.pipe(
-  preprocessEntity,
+  addMetadata,
   omitWhenPropIsEmpty('phone'),
   sortByProp('firstName'),
   sortByProp('lastName'),
@@ -74,74 +77,19 @@ export const buildDirectoryGroups = R.pipe(
   //R.indexBy(R.prop('id')),
 )
 
-//export const deriveFavorites = R.pipe(
-//  preprocessEntity,
-//  omitWhenPropIsEmpty('phone'),
-//  sortByProp('firstName'),
-//  sortByProp('lastName'),
-//  R.map(
-//    R.evolve({
-//      phone: normalizePhone,
-//    }),
-//  ),
-//  R.groupBy(
-//    R.compose(
-//      R.head,
-//      R.prop('lastName'),
-//    ),
-//buildContactGroups //  ),
-//)
+const contacts = buildUpDirectory(data.contacts)
+const groups = buildDirectoryGroups(contacts)
 
 const normalize = R.pipe(R.indexBy(R.prop('id')))
 
-const directory = buildUpDirectory(data.contacts)
-const groups = buildDirectoryGroups(directory)
-const normalized = normalize(directory)
+const makeEntities = (contacts, groups) => () => ({
+  contacts: normalize(contacts),
+  groups,
+})
 
-const getEntities = () => {
-  return {
-    contacts: {
-      byId: R.indexBy(R.prop('id'))(directory),
-      allIds: R.map(R.prop('id'))(directory),
-    },
-    groups,
-  }
-}
+export const getEntities = makeEntities(contacts, groups)
 
-const entities = getEntities()
-
-const selectEntitiesByGroup = entity => group =>
-  entity.allIds
-    .map(id => entity.byId[id])
+export const selectEntitiesByGroup = entity => group =>
+  R.keys(entity)
+    .map(id => entity[id])
     .filter(x => group.includes(x.group))
-
-console.log(entities)
-console.log(
-  "DEBUG::\n\n\nselectEntitiesByGroup('A')\n",
-  selectEntitiesByGroup(entities.contacts)('L'),
-  selectEntitiesByGroup(entities.contacts)('A'),
-  selectEntitiesByGroup(entities.contacts)('Z'),
-)
-
-//console.log('DEBUG::\n\n\ndirectory\n', directory)
-//console.log('DEBUG::\n\n\ngroups\n', groups)
-//console.log('DEBUG::\n\n\nnormalized\n', normalized)
-
-//const flippedProp = R.flip(R.prop)
-
-//const mergeGroupsIntoDirectory = R.pipe(
-//  R.map(x => {
-//    console.group('YOOOO')
-//    console.log('\nx.lastName', x.lastName)
-//    console.log('\nR.head(x.lastName)', R.head(x.lastName))
-//    console.log('\ngroups[R.head(x.lastName)]', groups[R.head(x.lastName)])
-//    console.groupEnd()
-//
-//    return R.assoc('group', groups[R.head(x.lastName)], x)
-//  }),
-//)
-//
-//console.log('DEBUG::\n\n\ndata\n', data)
-//console.log('DEBUG::\n\n\ngroups\n', groups)
-//
-//console.log('merging:', mergeGroupsIntoDirectory(directory))
