@@ -2,15 +2,19 @@ import React, { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
 import * as R from 'ramda'
 
+import makeSeedData from '../shared/seedData'
+
 import ContactItem from '../components/ContactItem'
 import Directory from '../components/Directory'
-import Context, { Data, Styles } from '../shared/context'
+import Context from '../shared/context'
 import { getEntities } from '../shared/utils'
 
 export default function Index() {
-  const data = useContext(Data)
-  const styles = useContext(Styles)
+  const response = getEntities()
   const { contacts, groups } = getEntities()
+
+  //console.log(makeSeedData(20))
+  //console.log(makeSeedData(40))
 
   useEffect(() => {
     document.title = 'Contacts'

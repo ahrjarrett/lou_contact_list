@@ -23,15 +23,11 @@ const makeListRenderer = (
   contacts,
   groups,
 ) => doesFilterFavorites => state => {
-  return R.keys(groups).map((groupId, index) => {
+  return Object.keys(groups).map((groupId, index) => {
     const groupedContacts = selectEntitiesByGroup(contacts)(groupId)
-
     const filteredContacts = !doesFilterFavorites
       ? groupedContacts
       : groupedContacts.filter(({ id }) => state[id])
-
-    console.log('DEBUG::\n\n\ngroupedContacts\n', groupedContacts)
-    console.log('DEBUG::\n\n\nfilteredContacts\n', filteredContacts)
 
     return (
       <div key={groupId}>
@@ -50,6 +46,10 @@ const makeListRenderer = (
 
 export default function Directory({ contacts, groups }) {
   const styles = useContext(Styles)
+
+  React.useEffect(() => {
+    console.log('rending Directory')
+  })
 
   const handleClick = id => e =>
     dispatch({ type: 'TOGGLE_FAVORITE', payload: id })
@@ -71,8 +71,6 @@ export default function Directory({ contacts, groups }) {
   )
   const renderContacts = renderList(false)
   const renderFavorites = renderList(true)
-
-  console.log('DEBUG::\n\n\nstate\n', state)
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>

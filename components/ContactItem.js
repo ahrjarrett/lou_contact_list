@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 
 import { Styles } from '../shared/context'
 
@@ -9,10 +9,16 @@ export default function ContactItem({
   phone,
   favorite,
   handleClick,
+  ...props
 }) {
+  useEffect(() => {
+    console.log('reinder')
+
+    //console.log('DEBUG::\n\n\nstate\n', state)
+  })
   const styles = useContext(Styles)
 
-  const handler = handleClick(id)
+  const handler = useCallback(handleClick(id))
 
   return (
     <div style={styles.contactItem}>
