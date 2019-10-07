@@ -1,6 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import * as R from 'ramda'
 
+export function reducer(state, { type, payload }) {
+  switch (type) {
+    case 'TOGGLE_FAVORITE': {
+      return { ...state, [payload]: !state[payload] }
+    }
+    default:
+      return state
+  }
+}
+
 import ContactItem from '../components/ContactItem'
 import { Styles } from '../shared/context'
 
@@ -26,6 +36,7 @@ export default function List({
   group,
   handleClick,
   favorites,
+  requiredProp,
 }) {
   const styles = useContext(Styles)
 

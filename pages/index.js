@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import * as R from 'ramda'
 
 import makeSeedData from '../shared/seedData'
@@ -7,14 +8,10 @@ import makeSeedData from '../shared/seedData'
 import ContactItem from '../components/ContactItem'
 import Directory from '../components/Directory'
 import Context from '../shared/context'
-import { getEntities } from '../shared/utils'
 
 export default function Index() {
-  const response = getEntities()
-  const { contacts, groups } = getEntities()
-
-  //console.log(makeSeedData(20))
-  //console.log(makeSeedData(40))
+  const router = useRouter()
+  console.log(router)
 
   useEffect(() => {
     document.title = 'Contacts'
@@ -24,7 +21,7 @@ export default function Index() {
     <Context>
       <div>
         <Head />
-        <Directory contacts={contacts} groups={groups} />
+        <Directory />
       </div>
     </Context>
   )

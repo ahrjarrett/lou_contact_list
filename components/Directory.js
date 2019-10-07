@@ -1,21 +1,17 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useReducer, useState } from 'react'
 import dynamic from 'next/dynamic'
 import * as R from 'ramda'
 
+import {
+  useFavoritesReducer,
+  useData,
+  useParamReducer,
+  handleClick,
+} from '../shared/hooks'
 import { Styles } from '../shared/context'
 import { selectEntitiesByGroup } from '../shared/selectors'
 
 const List = dynamic(() => import('../components/List'))
-
-export function reducer(state, { type, payload }) {
-  switch (type) {
-    case 'TOGGLE_FAVORITE': {
-      return { ...state, [payload]: !state[payload] }
-    }
-    default:
-      return state
-  }
-}
 
 const makeListRenderer = (
   styles,
@@ -44,30 +40,26 @@ const makeListRenderer = (
   })
 }
 
-export default function Directory({ contacts, groups }) {
+export default function Directory() {
   const styles = useContext(Styles)
-
-  React.useEffect(() => {
-    console.log('rending Directory')
-  })
-
-  const handleClick = id => e =>
-    dispatch({ type: 'TOGGLE_FAVORITE', payload: id })
-
-  const [state, dispatch] = useReducer(
-    reducer,
-    R.reduce(
-      (acc, curr) => ({ ...acc, [curr]: contacts[curr].favorite }),
-      {},
-      R.keys(contacts),
-    ),
+  const { contacts, groups } = useData()
+  const [paramState, paramDispatch] = useParamReducer()
+  const [favoritesState, dispatchToFavorites] = useFavoritesReducer(
+    contacts,
   )
+
+  console.group('in Directory')
+
+  console.log('requiredProp', requiredProp)
+  console.log('state', state)
+  console.groupEnd()
 
   const renderList = makeListRenderer(
     styles,
     handleClick,
     contacts,
     groups,
+    state,
   )
   const renderContacts = renderList(false)
   const renderFavorites = renderList(true)
@@ -76,12 +68,12 @@ export default function Directory({ contacts, groups }) {
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       <div style={{ width: '50%' }}>
         <h1>All Contacts</h1>
-        {renderContacts(state)}
       </div>
       <div style={{ width: '50%' }}>
         <h1>Favorites</h1>
-        {renderFavorites(state)}
       </div>
     </div>
   )
 }
+// {renderContacts(state)}
+// {renderFavorites(state)}

@@ -5,6 +5,8 @@ const listWrapper = {
   flexWrap: 'wrap',
 }
 
+const directory = {}
+
 const list = {
   width: 400,
   marginLeft: 15,
